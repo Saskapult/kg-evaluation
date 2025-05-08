@@ -70,7 +70,7 @@ def dspy_evaluate_response(correct_answer, context, judge_model):
 		"""
 		correct_answer: int = dspy.InputField()
 		context: str = dspy.InputField()
-		contains_correct_information: bool = dspy.OutputField()#desc="True if the context contains the information stated in the correct answer, otherwise false")
+		contains_correct_information: bool = dspy.OutputField()
 	evalualte = dspy.Predict(EvalSignature)
 
 	with dspy.context(lm=dspy.LM(judge_model)):
@@ -186,10 +186,6 @@ def main():
 
 	d = generate_graphs(args.model)
 	generate_results(d, args.judge)
-
-	# G = load_graph_from_json(json_file)
-	# node_embeddings, _ = generate_embeddings(G, embedding_model)
-	# evaluate_accuracy(questions_answers, node_embeddings, embedding_model, G, output_file)
 
 
 if __name__ == "__main__":
