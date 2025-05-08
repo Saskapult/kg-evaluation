@@ -6,4 +6,14 @@ Improvements over existing MINE codebase:
 - Better input format facilitates custom input data
 
 ## Usage:
-`uv run evaluation.py <the model to generate knowledge grpahs> <the model to evaluate the knowledge graphs>`
+First run:
+
+`uv run evaluation.py <the model to generate knowledge graphs> <the model to evaluate the knowledge graphs>`
+
+Which will generate knowledge graphs and evaluate their efficacy. 
+
+Then run:
+
+`uv run results.py results/<the model to generate knowledge graphs>/<the model to evaluate the knowledge graphs>`
+
+Which will display the results in an easy-to-comprehend format. 
