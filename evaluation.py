@@ -78,11 +78,14 @@ def dspy_evaluate_response(correct_answer, context, judge_model):
 
 
 # Generate grpahs for a model and save them to disk
-def generate_graphs(model, skip_existing=True):
+def generate_graphs(model, skip_existing=True, limit=None):
 	kg = KGGen(model=model)
 	graphs_dir = f"graphs/{model.replace("/", "_")}"
 	os.makedirs(graphs_dir, exist_ok=True)
 	inputs = [e for e in os.scandir("inputs") if e.is_file()]
+
+	if limit:
+		inputs = inputs[:limit]
 
 	for i, f in enumerate(inputs):
 		input_path = f"inputs/{f.name}"
@@ -182,9 +185,10 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("model")
 	parser.add_argument("judge")
+	parser.add_argument("--limit", type=int)
 	args = parser.parse_args()
 
-	d = generate_graphs(args.model)
+	d = generate_graphs(args.model, limit=args.limit)
 	generate_results(d, args.judge)
 
 
