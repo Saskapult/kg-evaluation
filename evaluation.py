@@ -108,7 +108,7 @@ def generate_graphs(model, skip_existing=True, limit=None):
 			"edges": list(graph.edges),
 			"relations": list(graph.relations),
 		}
-		print(graph_data)
+		# print(graph_data)
 		with open(output_path, "w") as f:
 			json.dump(graph_data, f, indent=2)
 	
@@ -184,20 +184,21 @@ def generate_results(graphs_dir, judge_model):
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("model")
-	parser.add_argument("judge")
-	parser.add_argument("adapter", nargs="?")
+	parser.add_argument("judge", nargs="?")
+	# parser.add_argument("adapter", nargs="?")
 	parser.add_argument("--limit", type=int)
-	parser.add_argument("--nojudge", action="store_true")
 	args = parser.parse_args()
 
-	if args.adapter:
-		print(f"Using two-step adapter with {args.adapter}")
-		print("This is probably a bad idea!")
-		dspy.configure(adapter=dspy.TwoStepAdapter(dspy.LM(args.adapter)))
+	# if args.adapter:
+	# 	print(f"Using two-step adapter with {args.adapter}")
+	# 	print("This is probably a bad idea!")
+	# 	dspy.configure(adapter=dspy.TwoStepAdapter(dspy.LM(args.adapter)))
 
 	d = generate_graphs(args.model, limit=args.limit)
-	if not args.nojudge:
+	if args.judge:
 		generate_results(d, args.judge)
+	else:
+		print("You will need to specify a judge LLM to get results")
 
 
 if __name__ == "__main__":
