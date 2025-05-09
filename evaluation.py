@@ -185,11 +185,19 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("model")
 	parser.add_argument("judge")
+	parser.add_argument("adapter", nargs="?")
 	parser.add_argument("--limit", type=int)
+	parser.add_argument("--nojudge", action="store_true")
 	args = parser.parse_args()
 
+	if args.adapter:
+		print(f"Using two-step adapter with {args.adapter}")
+		print("This is probably a bad idea!")
+		dspy.configure(adapter=dspy.TwoStepAdapter(dspy.LM(args.adapter)))
+
 	d = generate_graphs(args.model, limit=args.limit)
-	generate_results(d, args.judge)
+	if not args.nojudge:
+		generate_results(d, args.judge)
 
 
 if __name__ == "__main__":
