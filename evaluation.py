@@ -148,7 +148,7 @@ def evaluate_accuracy(questions_answers, node_embeddings, model, graph, output_f
 
 
 # For each file in the graphs directory, generate an evaluation
-def generate_results(graphs_dir, judge_model):
+def generate_results(graphs_dir, judge_model, skip_existing=True):
 	embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 	results_dir = f"results/{graphs_dir.split("/")[-1]}/{judge_model.replace("/", "_")}"
@@ -157,6 +157,11 @@ def generate_results(graphs_dir, judge_model):
 	graphs = [e.name for e in os.scandir(graphs_dir) if e.is_file()]
 	for i, filename in enumerate(graphs):
 		print(f"Evaluate {filename} ({i+1}/{len(graphs)})")
+
+		output_file = f"{results_dir}/{filename}"
+		if skip_existing and os.path.isfile(output_file):
+			print("Skip due to checkpoint detection")
+			continue
 		
 		input_file = f"inputs/{filename}"
 		if not os.path.isfile(input_file):
@@ -175,7 +180,6 @@ def generate_results(graphs_dir, judge_model):
 		print(f"Embeddings generated in {(en-st):.2f} seconds")
 
 		print("Evaluate")
-		output_file = f"{results_dir}/{filename}"
 		evaluate_accuracy(input_data["answers"], node_embeddings, embedding_model, G, output_file, judge_model)
 
 	return results_dir
